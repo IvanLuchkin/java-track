@@ -1,3 +1,5 @@
+package Model;
+
 import java.time.LocalTime;
 
 public class Flight {
@@ -71,7 +73,7 @@ public class Flight {
 
     public String toString() {
         return "Destination: " + this.destination + '\n' +
-                "Flight ID: " + this.flightID + '\n' +
+                "Model.Flight ID: " + this.flightID + '\n' +
                 "Plane type: " + this.plane + '\n' +
                 "Departure time: " + this.departureTime + '\n' +
                 "Departure day: " + this.day + '\n' +
