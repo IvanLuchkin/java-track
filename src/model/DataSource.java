@@ -1,12 +1,12 @@
-package Model;
+package model;
 
 import java.time.LocalTime;
 
-public class Model {
+public class DataSource {
 
     private static Flight[] flights = new Flight[10];
 
-    public Model() {
+    public DataSource() {
         flights[0] = new Flight("Kyiv", 1111, PlaneType.AIRBUS_A320, LocalTime.of(15, 0), Weekday.FRIDAY, 103);
         flights[1] = new Flight("Kyiv", 1112, PlaneType.BOEING_737_400, LocalTime.of(15,30), Weekday.TUESDAY, 102);
         flights[2] = new Flight("Odesa", 1113, PlaneType.BOEING_737_400, LocalTime.of(16, 0), Weekday.SATURDAY, 103);

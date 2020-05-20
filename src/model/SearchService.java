@@ -1,12 +1,12 @@
-package Model;
+package model;
 
 import java.time.LocalTime;
 
 public class SearchService {
 
-    Model dataSet;
+    DataSource dataSet;
 
-    public SearchService(Model dataSet) {
+    public SearchService(DataSource dataSet) {
         this.dataSet = dataSet;
     }
 
