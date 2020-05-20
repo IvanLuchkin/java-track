@@ -1,6 +1,5 @@
 import model.*;
 import controller.*;
-import view.*;
 
 public class Main {
 
@@ -8,8 +7,7 @@ public class Main {
         DataSource dataSet = new DataSource();
         SearchService search = new SearchService(dataSet);
         Controller ui = new Controller(search);
-        Viewer view = new Viewer(ui);
-        view.mainView();
+        ui.mainView();
     }
 
 }
