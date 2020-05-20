@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalTime;
+import java.util.Arrays;
 
 public class SearchService {
 
@@ -10,7 +11,35 @@ public class SearchService {
         this.dataSet = dataSet;
     }
 
-    public  Flight[] destinationSearch(String dest) {
+    public Flight[] destinationSearch(String dest) {
+        int arrSize = 0;
+        Flight[] result = new Flight[dataSet.getFlights().length];
+        for (Flight flight : dataSet.getFlights()) {
+            if(flight.getDestination().equals(dest)) result[arrSize++] = flight;
+        }
+        return Arrays.copyOf(result, arrSize);
+    }
+
+    public Flight[] weekdaySearch(Weekday day) {
+        int arrSize = 0;
+        Flight[] result = new Flight[dataSet.getFlights().length];
+        for (Flight flight : dataSet.getFlights()) {
+            if(flight.getWeekday().equals(day)) result[arrSize++] = flight;
+        }
+        return Arrays.copyOf(result, arrSize);
+    }
+
+    public Flight[] weekdayDTimeSearch(Weekday day, LocalTime dTime) {
+        int arrSize = 0;
+        Flight[] result = new Flight[dataSet.getFlights().length];
+        for(Flight flight : dataSet.getFlights()) {
+            if (flight.getWeekday().equals(day) && (flight.getDepartureTime().compareTo(dTime) >= 0)) {
+                result[arrSize++] = flight;
+            }
+        }
+        return Arrays.copyOf(result, arrSize);
+    }
+    public Flight[] destinationSearchV1(String dest) {
         int arrSize = 0;
         for (Flight flight : dataSet.getFlights()) {
             if(flight.getDestination().equals(dest)) arrSize++;
@@ -26,7 +55,7 @@ public class SearchService {
         return result;
     }
 
-    public Flight[] weekdaySearch(Weekday day) {
+    public Flight[] weekdaySearchV1(Weekday day) {
         int arrSize = 0;
         for (Flight flight : dataSet.getFlights()) {
             if(flight.getWeekday().equals(day)) arrSize++;
@@ -42,7 +71,7 @@ public class SearchService {
         return result;
     }
 
-    public Flight[] weekdayDTimeSearch(Weekday day, LocalTime dTime) {
+    public Flight[] weekdayDTimeSearchV1(Weekday day, LocalTime dTime) {
         int arrSize = 0;
         for (Flight flight : dataSet.getFlights()) {
             if(flight.getWeekday().equals(day) && (flight.getDepartureTime().compareTo(dTime) >= 0)) arrSize++;

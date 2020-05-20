@@ -1,10 +1,6 @@
 package view;
 
-import controller.Controller;
 import model.Flight;
-import model.Weekday;
-
-import java.time.LocalTime;
 
 public class Viewer {
 
