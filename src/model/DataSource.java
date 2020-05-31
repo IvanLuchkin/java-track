@@ -4,7 +4,7 @@ import java.time.LocalTime;
 
 public class DataSource {
 
-    private static Flight[] flights = new Flight[10];
+    private Flight[] flights = new Flight[10];
 
     public DataSource() {
         flights[0] = new Flight("Kyiv", 1111, PlaneType.AIRBUS_A320, LocalTime.of(15, 0), Weekday.FRIDAY, 103);

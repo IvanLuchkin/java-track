@@ -1,6 +1,8 @@
 import model.*;
 import controller.*;
 
+import java.util.Arrays;
+
 public class Main {
 
     public static void main(String...args) {
@@ -9,5 +11,4 @@ public class Main {
         Controller ui = new Controller(search);
         ui.mainView();
     }
-
 }

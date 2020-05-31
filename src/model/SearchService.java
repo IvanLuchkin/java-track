@@ -11,6 +11,10 @@ public class SearchService {
         this.dataSet = dataSet;
     }
 
+    public DataSource getSet() {
+        return this.dataSet;
+    }
+
     public Flight[] destinationSearch(String dest) {
         int arrSize = 0;
         Flight[] result = new Flight[dataSet.getFlights().length];
