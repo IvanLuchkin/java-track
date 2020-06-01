@@ -4,8 +4,10 @@ import model.*;
 import model.exceptions.IncorrectDestinationException;
 import model.exceptions.IncorrectTimeException;
 import model.exceptions.IncorrectWeekdayException;
+import util.FileUtil;
 import view.Viewer;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Scanner;
 
@@ -24,7 +26,7 @@ public class Controller {
     public void mainView() {
 
         n:  while (true) {
-            Viewer.printUI("Type '1' to search by destination\nType '2' to search by weekday\nType '3' to search by weekday & time\nType '4' to print everything\nType '0' to exit.\n");
+            Viewer.printUI("Type '1' to search by destination\nType '2' to search by weekday\nType '3' to search by weekday & time\nType '4' to print everything\nType '5' to save to the file.\nType '0' to exit.\n");
             switch (this.input.nextLine()) {
                 case "1" :
                     Viewer.printUI("Enter destination: ");
@@ -68,6 +70,14 @@ public class Controller {
                     break;
                 case "0":
                     break n;
+                case "5":
+                    Viewer.printUI("Enter filename: ");
+                    try {
+                        FileUtil.writeTeachers(this.search.getSet().getFlights(), this.input.nextLine());
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
+                    }
+                    break;
                 default :
                     Viewer.printUI("Wrong menu operator.\n");
                     break;
