@@ -3,10 +3,11 @@ package controller;
 import model.*;
 import model.exceptions.*;
 import util.FileUtil;
-import view.Viewer;
+import view.*;
 
 import java.io.IOException;
 import java.time.LocalTime;
+import java.util.Locale;
 import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
@@ -19,7 +20,6 @@ public class Controller {
     public Scanner input;
     private Validator validator;
 
-
     public Controller(SearchService search) {
         this.search = search;
         input = new Scanner(System.in);
@@ -28,11 +28,28 @@ public class Controller {
 
     public void mainView() {
 
+        Viewer.printUI("Type '1' to choose English language\nType '2' to choose Ukrainian language\n");
+        l: while (true) {
+            switch (this.input.nextLine()) {
+                case "1":
+                    log.info("english language chosen");
+                    Viewer.initLocaleManager(new Locale ("en"));
+                    break l;
+                case "2":
+                    log.info("ukrainian language chosen");
+                    Viewer.initLocaleManager(new Locale ("ua"));
+                    break l;
+                default:
+                    Viewer.printLocalizedUI(TextConstants.wrongOperatorMessage);
+                    break l;
+            }
+        }
+
         n:  while (true) {
-            Viewer.printUI("Type '1' to search by destination\nType '2' to search by weekday\nType '3' to search by weekday & time\nType '4' to print everything\nType '5' to save to the file.\nType '0' to exit.\n");
+            Viewer.printLocalizedUI(TextConstants.mainUI);
             switch (this.input.nextLine()) {
                 case "1" :
-                    Viewer.printUI("Enter destination: ");
+                    Viewer.printLocalizedUI(TextConstants.eDestination);
                     log.info("destination search");
                     try {
                         String data = this.input.nextLine();
@@ -44,7 +61,7 @@ public class Controller {
                     }
                     break;
                 case "2" :
-                    Viewer.printUI("Enter weekday: ");
+                    Viewer.printLocalizedUI(TextConstants.eWeekday);
                     log.info("weekday search");
                     try {
                         String data = this.input.nextLine();
@@ -57,13 +74,13 @@ public class Controller {
                     break;
                 case "3":
                     try {
-                        Viewer.printUI("Enter weekday: ");
+                        Viewer.printLocalizedUI(TextConstants.eWeekday);
                         log.info("weekday and time search");
                         String weekdayInput = this.input.nextLine();
                         validator.checkWeekday(weekdayInput);
                         Weekday weekday = Weekday.valueOf(weekdayInput);
 
-                        Viewer.printUI("Enter departure time: ");
+                        Viewer.printLocalizedUI(TextConstants.eTime);
                         String timeInput = this.input.nextLine();
                         validator.checkTime(timeInput);
                         LocalTime dTime = LocalTime.parse(timeInput);
@@ -81,10 +98,11 @@ public class Controller {
                     Viewer.tableFlightView(this.search.getSet().getFlights());
                     break;
                 case "0":
+                    Viewer.printLocalizedUI(TextConstants.exitMessage);
                     log.info("EXIT");
                     break n;
                 case "5":
-                    Viewer.printUI("Enter filename: ");
+                    Viewer.printLocalizedUI(TextConstants.eFileName);
                     log.info("writing to file");
                     try {
                         FileUtil.writeTeachers(this.search.getSet().getFlights(), this.input.nextLine());
@@ -95,7 +113,7 @@ public class Controller {
                     break;
                 default :
                     log.error("incorrect menu operator");
-                    Viewer.printUI("Wrong menu operator.\n");
+                    Viewer.printLocalizedUI(TextConstants.wrongOperatorMessage);
                     break;
             }
         }

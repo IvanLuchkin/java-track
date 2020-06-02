@@ -41,7 +41,7 @@ public class LabFour {
     }
 
     private static List<Integer> generateArrayList() {
-        List<Integer> list = new ArrayList<Integer>();
+        List<Integer> list = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
             list.add((int) (Math.random() * 100));
         }

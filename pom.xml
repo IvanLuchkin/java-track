@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>javaTrack</groupId>
-    <artifactId>lab5</artifactId>
+    <groupId>java-track</groupId>
+    <artifactId>java-track</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <name>lab5</name>
+    <name>java-track</name>
     <url>http://www.example.com</url>
 
     <properties>
@@ -80,5 +80,15 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>10</source>
+                    <target>10</target>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>
