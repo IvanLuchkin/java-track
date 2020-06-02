@@ -7,7 +7,7 @@ public class IncorrectWeekdayException extends RuntimeException {
     }
 
     public IncorrectWeekdayException(String message) {
-        super(message);
+        super("Incorrect weekday " + message + ". Please, try again.\n");
     }
 
 }

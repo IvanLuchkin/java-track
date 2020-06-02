@@ -11,19 +11,19 @@ class Validator {
 
     void checkTime(String input) {
         if(!input.matches("^([0-1][0-9]|2[0-3]):([0-5][0-9])$")) {
-            throw new IncorrectTimeException();
+            throw new IncorrectTimeException(input);
         }
     }
 
     void checkDestination(String input) {
         if(!input.matches("[A-Z][a-z]+")) {
-            throw new IncorrectDestinationException();
+            throw new IncorrectDestinationException(input);
         }
     }
 
     void checkWeekday(String input) {
         if(!Arrays.toString(Weekday.values()).contains(input)) {
-            throw new IncorrectWeekdayException();
+            throw new IncorrectWeekdayException(input);
         }
     }
 

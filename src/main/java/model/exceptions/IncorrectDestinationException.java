@@ -7,7 +7,7 @@ public class IncorrectDestinationException extends RuntimeException {
     }
 
     public IncorrectDestinationException(String message) {
-        super(message);
+        super("Incorrect destination " + message + ". Please, try again.\n");
     }
 
 }

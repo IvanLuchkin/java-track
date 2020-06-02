@@ -1,12 +1,13 @@
 package model;
 
 import util.FileUtil;
-
-import java.time.LocalTime;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DataSource {
 
     private Flight[] flights;
+    private static final Logger log = LogManager.getLogger(DataSource.class);
 
     public DataSource() {
        /*
@@ -24,6 +25,7 @@ public class DataSource {
        try {
            this.flights = FileUtil.readTeachers("/Users/ivanluchkin/IdeaProjects/java-track/set");
        } catch (Exception e) {
+           log.fatal("cannot read from file - {}", e.getMessage());
            e.printStackTrace();
        }
     }

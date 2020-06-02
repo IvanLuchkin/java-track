@@ -2,10 +2,13 @@ package model;
 
 import java.time.LocalTime;
 import java.util.Arrays;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class SearchService {
 
     DataSource dataSet;
+    private static final Logger log = LogManager.getLogger(SearchService.class);
 
     public SearchService(DataSource dataSet) {
         this.dataSet = dataSet;
@@ -16,6 +19,7 @@ public class SearchService {
     }
 
     public Flight[] destinationSearch(String dest) {
+        log.info("searched dest - {}", dest);
         int arrSize = 0;
         Flight[] result = new Flight[dataSet.getFlights().length];
         for (Flight flight : dataSet.getFlights()) {
@@ -25,6 +29,7 @@ public class SearchService {
     }
 
     public Flight[] weekdaySearch(Weekday day) {
+        log.info("searched day - {}", day);
         int arrSize = 0;
         Flight[] result = new Flight[dataSet.getFlights().length];
         for (Flight flight : dataSet.getFlights()) {
@@ -34,6 +39,7 @@ public class SearchService {
     }
 
     public Flight[] weekdayDTimeSearch(Weekday day, LocalTime dTime) {
+        log.info("searched weekday - {}, searched time - {}", day, dTime);
         int arrSize = 0;
         Flight[] result = new Flight[dataSet.getFlights().length];
         for(Flight flight : dataSet.getFlights()) {

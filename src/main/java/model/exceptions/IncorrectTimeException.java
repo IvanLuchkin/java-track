@@ -7,7 +7,7 @@ public class IncorrectTimeException extends RuntimeException {
     }
 
     public IncorrectTimeException(String message) {
-        super(message);
+        super("Incorrect time " + message + ". Please, try again.\n");
     }
 
 }

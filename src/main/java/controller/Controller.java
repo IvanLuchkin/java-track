@@ -1,9 +1,7 @@
 package controller;
 
 import model.*;
-import model.exceptions.IncorrectDestinationException;
-import model.exceptions.IncorrectTimeException;
-import model.exceptions.IncorrectWeekdayException;
+import model.exceptions.*;
 import util.FileUtil;
 import view.Viewer;
 
@@ -11,11 +9,16 @@ import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Scanner;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class Controller {
 
+    private static final Logger log = LogManager.getLogger(Controller.class);
     public SearchService search;
     public Scanner input;
     private Validator validator;
+
 
     public Controller(SearchService search) {
         this.search = search;
@@ -30,38 +33,47 @@ public class Controller {
             switch (this.input.nextLine()) {
                 case "1" :
                     Viewer.printUI("Enter destination: ");
+                    log.info("destination search");
                     try {
                         String data = this.input.nextLine();
                         validator.checkDestination(data);
                         Viewer.tableFlightView(this.search.destinationSearch(data));
                     } catch (IncorrectDestinationException incorrectDestination) {
+                        log.error("incorrect dest - {}", incorrectDestination.getMessage());
                         Viewer.printUI(incorrectDestination.getMessage());
                     }
                     break;
                 case "2" :
                     Viewer.printUI("Enter weekday: ");
+                    log.info("weekday search");
                     try {
                         String data = this.input.nextLine();
                         validator.checkWeekday(data);
                         Viewer.tableFlightView(this.search.weekdaySearch(Weekday.valueOf(data)));
                     } catch (IncorrectWeekdayException incorrectWeekday) {
+                        log.error("incorrect weekday - {}", incorrectWeekday.getMessage());
                         Viewer.printUI(incorrectWeekday.getMessage());
                     }
                     break;
                 case "3":
                     try {
                         Viewer.printUI("Enter weekday: ");
+                        log.info("weekday and time search");
                         String weekdayInput = this.input.nextLine();
                         validator.checkWeekday(weekdayInput);
                         Weekday weekday = Weekday.valueOf(weekdayInput);
+
                         Viewer.printUI("Enter departure time: ");
                         String timeInput = this.input.nextLine();
                         validator.checkTime(timeInput);
                         LocalTime dTime = LocalTime.parse(timeInput);
+
                         Viewer.tableFlightView(this.search.weekdayDTimeSearch(weekday, dTime));
                     } catch (IncorrectWeekdayException incorrectWeekday) {
+                        log.error("incorrect weekday - {}", incorrectWeekday.getMessage());
                         Viewer.printUI(incorrectWeekday.getMessage());
                     } catch (IncorrectTimeException incorrectTime) {
+                        log.error("incorrect time - {}", incorrectTime.getMessage());
                         Viewer.printUI(incorrectTime.getMessage());
                     }
                     break;
@@ -69,16 +81,20 @@ public class Controller {
                     Viewer.tableFlightView(this.search.getSet().getFlights());
                     break;
                 case "0":
+                    log.info("EXIT");
                     break n;
                 case "5":
                     Viewer.printUI("Enter filename: ");
+                    log.info("writing to file");
                     try {
                         FileUtil.writeTeachers(this.search.getSet().getFlights(), this.input.nextLine());
                     } catch (IOException ioe) {
-                        ioe.printStackTrace();
+                        log.error("i/o exception - {}", ioe.getMessage());
+                        Viewer.printUI(ioe.getMessage());
                     }
                     break;
                 default :
+                    log.error("incorrect menu operator");
                     Viewer.printUI("Wrong menu operator.\n");
                     break;
             }
