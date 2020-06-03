@@ -10,7 +10,7 @@ public class Viewer {
 
     private static LocaleManager localeManager;
 
-    private static String printFormat = "%-20s%-12s%-15s%-17s%-12s%-9s%n";
+    private static final String printFormat = "%-20s%-12s%-15s%-17s%-12s%-9s%n";
 
     public static void tableFlightView(Flight flight) {
         System.out.printf(printFormat, localeManager.getString(TextConstants.destination), localeManager.getString(TextConstants.flightId), localeManager.getString(TextConstants.plane), localeManager.getString(TextConstants.departureTime), localeManager.getString(TextConstants.weekd), localeManager.getString(TextConstants.planeId));
@@ -40,7 +40,5 @@ public class Viewer {
         String value = localeManager.getString(element);
         new PrintStream(System.out, true, StandardCharsets.UTF_8).println(value);
     }
-
-
 
 }

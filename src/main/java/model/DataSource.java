@@ -23,7 +23,7 @@ public class DataSource {
         flights[9] = new Flight("San-Diego", 6112, PlaneType.BOEING_737_400, LocalTime.of(12, 45), Weekday.WEDNESDAY, 209);
         */
        try {
-           this.flights = FileUtil.readTeachers("/Users/ivanluchkin/IdeaProjects/java-track/set");
+           this.flights = FileUtil.readFlights("/Users/ivanluchkin/IdeaProjects/java-track/set");
        } catch (Exception e) {
            log.fatal("cannot read from file - {}", e.getMessage());
            e.printStackTrace();

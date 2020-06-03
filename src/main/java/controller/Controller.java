@@ -18,7 +18,7 @@ public class Controller {
     private static final Logger log = LogManager.getLogger(Controller.class);
     public SearchService search;
     public Scanner input;
-    private Validator validator;
+    private final Validator validator;
 
     public Controller(SearchService search) {
         this.search = search;
@@ -105,7 +105,7 @@ public class Controller {
                     Viewer.printLocalizedUI(TextConstants.eFileName);
                     log.info("writing to file");
                     try {
-                        FileUtil.writeTeachers(this.search.getSet().getFlights(), this.input.nextLine());
+                        FileUtil.writeFlights(this.search.getSet().getFlights(), this.input.nextLine());
                     } catch (IOException ioe) {
                         log.error("i/o exception - {}", ioe.getMessage());
                         Viewer.printUI(ioe.getMessage());

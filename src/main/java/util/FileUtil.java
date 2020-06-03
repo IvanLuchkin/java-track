@@ -10,13 +10,13 @@ public class FileUtil {
 
     private static final Logger log = LogManager.getLogger(FileUtil.class);
 
-    public static void writeTeachers(Flight[] flights, String filePath) throws IOException {
+    public static void writeFlights(Flight[] flights, String filePath) throws IOException {
         log.info("trying to write to - {}", filePath);
         ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(filePath));
         outputStream.writeObject(flights);
     }
 
-    public static Flight[] readTeachers(String filePath) throws IOException, ClassNotFoundException {
+    public static Flight[] readFlights(String filePath) throws IOException, ClassNotFoundException {
         log.info("trying to read from - {}", filePath);
         ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filePath));
         return (Flight[]) objectInputStream.readObject();

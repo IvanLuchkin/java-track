@@ -68,10 +68,6 @@ public class Flight implements Serializable {
         return this.planeID;
     }
 
-    /*public String toString() {
-        return this.getDestination() + ' ' + this.getFlightID() + ' ' + this.getPlaneType() + ' ' + this.getDepartureTime() + ' ' + this.getWeekday() + ' ' + this.getPlaneID();
-    }*/
-
     public String toString() {
         return "Destination: " + this.destination + '\n' +
                 "Model.Flight ID: " + this.flightID + '\n' +
