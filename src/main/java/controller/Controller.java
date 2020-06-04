@@ -16,89 +16,44 @@ import org.apache.logging.log4j.Logger;
 public class Controller {
 
     private static final Logger LOGGER = LogManager.getLogger(Controller.class);
-    private SearchService search;
-    private InputController input;
+    private SearchService searchService;
+    private InputController inputController;
 
     public Controller() {
         try {
-            this.search = new SearchService();
+            this.searchService = new SearchService();
         } catch (IOException | ClassNotFoundException exception) {
             Viewer.printUI(exception.getMessage());
             System.exit(1);
         }
-        this.input = new InputController();
+        this.inputController = new InputController();
     }
 
     public void mainView() {
 
-        Viewer.printUI("Type '1' to choose English language\nType '2' to choose Ukrainian language\n");
         getLocale();
 
         n:  while (true) {
             Viewer.printLocalizedUI(TextConstants.MAIN_UI);
-            switch (input.inputValue()) {
+            switch (inputController.inputValue()) {
                 case "1" :
-                    Viewer.printLocalizedUI(TextConstants.ENTER_DESTINATION);
-                    LOGGER.info("destination search");
-                    try {
-                        String data = input.inputValue();
-                        Validator.checkDestination(data);
-                        Viewer.tableFlightView(this.search.destinationSearch(data));
-                    } catch (IncorrectDestinationException incorrectDestination) {
-                        LOGGER.error("incorrect dest - {}", incorrectDestination.getMessage());
-                        Viewer.printUI(incorrectDestination.getMessage());
-                    }
+                    destinationCase();
                     break;
                 case "2" :
-                    Viewer.printLocalizedUI(TextConstants.ENTER_WEEKDAY);
-                    LOGGER.info("weekday search");
-                    try {
-                        String data = input.inputValue();
-                        Validator.checkWeekday(data);
-                        Viewer.tableFlightView(this.search.weekdaySearch(Weekday.valueOf(data)));
-                    } catch (IncorrectWeekdayException incorrectWeekday) {
-                        LOGGER.error("incorrect weekday - {}", incorrectWeekday.getMessage());
-                        Viewer.printUI(incorrectWeekday.getMessage());
-                    }
+                    weekdayCase();
                     break;
                 case "3":
-                    try {
-                        Viewer.printLocalizedUI(TextConstants.ENTER_WEEKDAY);
-                        LOGGER.info("weekday and time search");
-                        String weekdayInput = input.inputValue();
-                        Validator.checkWeekday(weekdayInput);
-                        Weekday weekday = Weekday.valueOf(weekdayInput);
-
-                        Viewer.printLocalizedUI(TextConstants.ENTER_TIME);
-                        String timeInput = input.inputValue();
-                        Validator.checkTime(timeInput);
-                        LocalTime dTime = LocalTime.parse(timeInput);
-
-                        Viewer.tableFlightView(this.search.weekdayDTimeSearch(weekday, dTime));
-                    } catch (IncorrectWeekdayException incorrectWeekday) {
-                        LOGGER.error("incorrect weekday - {}", incorrectWeekday.getMessage());
-                        Viewer.printUI(incorrectWeekday.getMessage());
-                    } catch (IncorrectTimeException incorrectTime) {
-                        LOGGER.error("incorrect time - {}", incorrectTime.getMessage());
-                        Viewer.printUI(incorrectTime.getMessage());
-                    }
+                    timeCase();
                     break;
                 case "4":
-                    Viewer.tableFlightView(this.search.getSet().getFlights());
+                    Viewer.tableFlightView(searchService.getSet().getFlights());
                     break;
                 case "0":
                     Viewer.printLocalizedUI(TextConstants.EXIT_MESSAGE);
                     LOGGER.info("EXIT");
                     break n;
                 case "5":
-                    Viewer.printLocalizedUI(TextConstants.ENTER_FILE_NAME);
-                    LOGGER.info("writing to file");
-                    try {
-                        DataManager.writeFlights(this.search.getSet().getFlights(), input.inputValue());
-                    } catch (IOException ioe) {
-                        LOGGER.error("i/o exception - {}", ioe.getMessage());
-                        Viewer.printUI(ioe.getMessage());
-                    }
+                    writeToFileCase();
                     break;
                 default :
                     LOGGER.error("incorrect menu operator");
@@ -106,11 +61,71 @@ public class Controller {
                     break;
             }
         }
+    }
 
+    private void writeToFileCase() {
+        Viewer.printLocalizedUI(TextConstants.ENTER_FILE_NAME);
+        LOGGER.info("writing to file");
+        try {
+            DataManager.writeFlights(searchService.getSet().getFlights(), inputController.inputValue());
+        } catch (IOException ioe) {
+            LOGGER.error("i/o exception - {}", ioe.getMessage());
+            Viewer.printUI(ioe.getMessage());
+        }
+    }
+
+    private void timeCase() {
+        try {
+            Viewer.printLocalizedUI(TextConstants.ENTER_WEEKDAY);
+            LOGGER.info("weekday and time search");
+            String weekdayInput = inputController.inputValue();
+            Validator.checkWeekday(weekdayInput);
+            Weekday weekday = Weekday.valueOf(weekdayInput);
+
+            Viewer.printLocalizedUI(TextConstants.ENTER_TIME);
+            String timeInput = inputController.inputValue();
+            Validator.checkTime(timeInput);
+            LocalTime dTime = LocalTime.parse(timeInput);
+
+            Viewer.tableFlightView(searchService.weekdayDTimeSearch(weekday, dTime));
+        } catch (IncorrectWeekdayException incorrectWeekday) {
+            LOGGER.error("incorrect weekday - {}", incorrectWeekday.getMessage());
+            Viewer.printUI(incorrectWeekday.getMessage());
+        } catch (IncorrectTimeException incorrectTime) {
+            LOGGER.error("incorrect time - {}", incorrectTime.getMessage());
+            Viewer.printUI(incorrectTime.getMessage());
+        }
+    }
+
+    private void weekdayCase() {
+        Viewer.printLocalizedUI(TextConstants.ENTER_WEEKDAY);
+        LOGGER.info("weekday search");
+        try {
+            String data = inputController.inputValue();
+            Validator.checkWeekday(data);
+            Viewer.tableFlightView(searchService.weekdaySearch(Weekday.valueOf(data)));
+        } catch (IncorrectWeekdayException incorrectWeekday) {
+            LOGGER.error("incorrect weekday - {}", incorrectWeekday.getMessage());
+            Viewer.printUI(incorrectWeekday.getMessage());
+        }
+    }
+
+    private void destinationCase() {
+        Viewer.printLocalizedUI(TextConstants.ENTER_DESTINATION);
+        LOGGER.info("destination search");
+        try {
+            String data = inputController.inputValue();
+            Validator.checkDestination(data);
+            Viewer.tableFlightView(searchService.destinationSearch(data));
+        } catch (IncorrectDestinationException incorrectDestination) {
+            LOGGER.error("incorrect dest - {}", incorrectDestination.getMessage());
+            Viewer.printUI(incorrectDestination.getMessage());
+        }
     }
 
     private void getLocale() {
-        switch (input.inputValue()) {
+        Viewer.printUI("Type '1' to choose English language\nType '2' to choose Ukrainian language\n");
+        switch (inputController.inputValue()) {
             case "1":
                 LOGGER.info("english language chosen");
                 Viewer.initLocaleManager(new Locale("en"));
