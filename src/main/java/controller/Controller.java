@@ -1,96 +1,85 @@
 package controller;
 
 import model.*;
-import model.exceptions.*;
-import util.FileUtil;
+import controller.exceptions.*;
+
+import model.entities.Weekday;
 import view.*;
 
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Locale;
-import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Controller {
 
-    private static final Logger log = LogManager.getLogger(Controller.class);
-    public SearchService search;
-    public Scanner input;
-    private final Validator validator;
+    private static final Logger LOGGER = LogManager.getLogger(Controller.class);
+    private SearchService search;
+    private InputController input;
 
-    public Controller(SearchService search) {
-        this.search = search;
-        input = new Scanner(System.in);
-        validator = new Validator();
+    public Controller() {
+        try {
+            this.search = new SearchService();
+        } catch (IOException | ClassNotFoundException exception) {
+            Viewer.printUI(exception.getMessage());
+            System.exit(1);
+        }
+        this.input = new InputController();
     }
 
     public void mainView() {
 
         Viewer.printUI("Type '1' to choose English language\nType '2' to choose Ukrainian language\n");
-        l: while (true) {
-            switch (this.input.nextLine()) {
-                case "1":
-                    log.info("english language chosen");
-                    Viewer.initLocaleManager(new Locale ("en"));
-                    break l;
-                case "2":
-                    log.info("ukrainian language chosen");
-                    Viewer.initLocaleManager(new Locale ("ua"));
-                    break l;
-                default:
-                    Viewer.printLocalizedUI(TextConstants.wrongOperatorMessage);
-                    break l;
-            }
-        }
+        getLocale();
 
         n:  while (true) {
-            Viewer.printLocalizedUI(TextConstants.mainUI);
-            switch (this.input.nextLine()) {
+            Viewer.printLocalizedUI(TextConstants.MAIN_UI);
+            switch (input.inputValue()) {
                 case "1" :
-                    Viewer.printLocalizedUI(TextConstants.eDestination);
-                    log.info("destination search");
+                    Viewer.printLocalizedUI(TextConstants.ENTER_DESTINATION);
+                    LOGGER.info("destination search");
                     try {
-                        String data = this.input.nextLine();
-                        validator.checkDestination(data);
+                        String data = input.inputValue();
+                        Validator.checkDestination(data);
                         Viewer.tableFlightView(this.search.destinationSearch(data));
                     } catch (IncorrectDestinationException incorrectDestination) {
-                        log.error("incorrect dest - {}", incorrectDestination.getMessage());
+                        LOGGER.error("incorrect dest - {}", incorrectDestination.getMessage());
                         Viewer.printUI(incorrectDestination.getMessage());
                     }
                     break;
                 case "2" :
-                    Viewer.printLocalizedUI(TextConstants.eWeekday);
-                    log.info("weekday search");
+                    Viewer.printLocalizedUI(TextConstants.ENTER_WEEKDAY);
+                    LOGGER.info("weekday search");
                     try {
-                        String data = this.input.nextLine();
-                        validator.checkWeekday(data);
+                        String data = input.inputValue();
+                        Validator.checkWeekday(data);
                         Viewer.tableFlightView(this.search.weekdaySearch(Weekday.valueOf(data)));
                     } catch (IncorrectWeekdayException incorrectWeekday) {
-                        log.error("incorrect weekday - {}", incorrectWeekday.getMessage());
+                        LOGGER.error("incorrect weekday - {}", incorrectWeekday.getMessage());
                         Viewer.printUI(incorrectWeekday.getMessage());
                     }
                     break;
                 case "3":
                     try {
-                        Viewer.printLocalizedUI(TextConstants.eWeekday);
-                        log.info("weekday and time search");
-                        String weekdayInput = this.input.nextLine();
-                        validator.checkWeekday(weekdayInput);
+                        Viewer.printLocalizedUI(TextConstants.ENTER_WEEKDAY);
+                        LOGGER.info("weekday and time search");
+                        String weekdayInput = input.inputValue();
+                        Validator.checkWeekday(weekdayInput);
                         Weekday weekday = Weekday.valueOf(weekdayInput);
 
-                        Viewer.printLocalizedUI(TextConstants.eTime);
-                        String timeInput = this.input.nextLine();
-                        validator.checkTime(timeInput);
+                        Viewer.printLocalizedUI(TextConstants.ENTER_TIME);
+                        String timeInput = input.inputValue();
+                        Validator.checkTime(timeInput);
                         LocalTime dTime = LocalTime.parse(timeInput);
 
                         Viewer.tableFlightView(this.search.weekdayDTimeSearch(weekday, dTime));
                     } catch (IncorrectWeekdayException incorrectWeekday) {
-                        log.error("incorrect weekday - {}", incorrectWeekday.getMessage());
+                        LOGGER.error("incorrect weekday - {}", incorrectWeekday.getMessage());
                         Viewer.printUI(incorrectWeekday.getMessage());
                     } catch (IncorrectTimeException incorrectTime) {
-                        log.error("incorrect time - {}", incorrectTime.getMessage());
+                        LOGGER.error("incorrect time - {}", incorrectTime.getMessage());
                         Viewer.printUI(incorrectTime.getMessage());
                     }
                     break;
@@ -98,26 +87,41 @@ public class Controller {
                     Viewer.tableFlightView(this.search.getSet().getFlights());
                     break;
                 case "0":
-                    Viewer.printLocalizedUI(TextConstants.exitMessage);
-                    log.info("EXIT");
+                    Viewer.printLocalizedUI(TextConstants.EXIT_MESSAGE);
+                    LOGGER.info("EXIT");
                     break n;
                 case "5":
-                    Viewer.printLocalizedUI(TextConstants.eFileName);
-                    log.info("writing to file");
+                    Viewer.printLocalizedUI(TextConstants.ENTER_FILE_NAME);
+                    LOGGER.info("writing to file");
                     try {
-                        FileUtil.writeFlights(this.search.getSet().getFlights(), this.input.nextLine());
+                        DataManager.writeFlights(this.search.getSet().getFlights(), input.inputValue());
                     } catch (IOException ioe) {
-                        log.error("i/o exception - {}", ioe.getMessage());
+                        LOGGER.error("i/o exception - {}", ioe.getMessage());
                         Viewer.printUI(ioe.getMessage());
                     }
                     break;
                 default :
-                    log.error("incorrect menu operator");
-                    Viewer.printLocalizedUI(TextConstants.wrongOperatorMessage);
+                    LOGGER.error("incorrect menu operator");
+                    Viewer.printLocalizedUI(TextConstants.WRONG_OPERATOR_MESSAGE);
                     break;
             }
         }
 
+    }
+
+    private void getLocale() {
+        switch (input.inputValue()) {
+            case "1":
+                LOGGER.info("english language chosen");
+                Viewer.initLocaleManager(new Locale("en"));
+                return;
+            case "2":
+                LOGGER.info("ukrainian language chosen");
+                Viewer.initLocaleManager(new Locale ("ua"));
+                return;
+            default:
+                Viewer.printLocalizedUI(TextConstants.WRONG_OPERATOR_MESSAGE);
+        }
     }
 
 }

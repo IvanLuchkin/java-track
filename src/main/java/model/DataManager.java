@@ -1,15 +1,17 @@
 package model;
 
-import util.FileUtil;
+import model.entities.Flight;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class DataSource {
+import java.io.*;
 
-    private Flight[] flights;
-    private static final Logger log = LogManager.getLogger(DataSource.class);
+public class DataManager {
 
-    public DataSource() {
+    private final Flight[] flights;
+    private static final Logger LOGGER = LogManager.getLogger(DataManager.class);
+
+    public DataManager() throws IOException, ClassNotFoundException {
        /*
         flights[0] = new Flight("Kyiv", 1111, PlaneType.AIRBUS_A320, LocalTime.of(15, 0), Weekday.FRIDAY, 103);
         flights[1] = new Flight("Kyiv", 1112, PlaneType.BOEING_737_400, LocalTime.of(15,30), Weekday.TUESDAY, 102);
@@ -22,17 +24,24 @@ public class DataSource {
         flights[8] = new Flight("Tokyo", 9937, PlaneType.AIRBUS_A320, LocalTime.of(23, 10), Weekday.WEDNESDAY, 208);
         flights[9] = new Flight("San-Diego", 6112, PlaneType.BOEING_737_400, LocalTime.of(12, 45), Weekday.WEDNESDAY, 209);
         */
-       try {
-           this.flights = FileUtil.readFlights("/Users/ivanluchkin/IdeaProjects/java-track/set");
-       } catch (Exception e) {
-           log.fatal("cannot read from file - {}", e.getMessage());
-           e.printStackTrace();
-       }
+        this.flights = readFlights("/Users/ivanluchkin/IdeaProjects/java-track/set");
     }
 
     public Flight[] getFlights() {
         return flights;
     }
 
+    public static void writeFlights(Flight[] flights, String filePath) throws IOException {
+        LOGGER.info("trying to write to - {}", filePath);
+        ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(filePath));
+        outputStream.writeObject(flights);
+        outputStream.close();
+    }
+
+    public static Flight[] readFlights(String filePath) throws IOException, ClassNotFoundException {
+        LOGGER.info("trying to read from - {}", filePath);
+        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filePath));
+        return (Flight[]) objectInputStream.readObject();
+    }
 
 }

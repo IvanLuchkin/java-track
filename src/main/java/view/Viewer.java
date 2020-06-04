@@ -1,6 +1,6 @@
 package view;
 
-import model.Flight;
+import model.entities.Flight;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -13,15 +13,15 @@ public class Viewer {
     private static final String printFormat = "%-20s%-12s%-15s%-17s%-12s%-9s%n";
 
     public static void tableFlightView(Flight flight) {
-        System.out.printf(printFormat, localeManager.getString(TextConstants.destination), localeManager.getString(TextConstants.flightId), localeManager.getString(TextConstants.plane), localeManager.getString(TextConstants.departureTime), localeManager.getString(TextConstants.weekd), localeManager.getString(TextConstants.planeId));
+        System.out.printf(printFormat, localeManager.getString(TextConstants.DESTINATION), localeManager.getString(TextConstants.FLIGHT_ID), localeManager.getString(TextConstants.PLANE_TYPE), localeManager.getString(TextConstants.DEPARTURE_TIME), localeManager.getString(TextConstants.WEEKDAY), localeManager.getString(TextConstants.PLANE_ID));
         System.out.printf(printFormat, flight.getDestination(), flight.getFlightID(), flight.getPlaneType(), flight.getDepartureTime(), flight.getWeekday(), flight.getPlaneID());
     }
 
     public static void tableFlightView(Flight[] arr) {
         if (arr.length == 0) {
-            printLocalizedUI(TextConstants.noData);
+            printLocalizedUI(TextConstants.NO_DATA);
         } else {
-            System.out.printf(printFormat, localeManager.getString(TextConstants.destination), localeManager.getString(TextConstants.flightId), localeManager.getString(TextConstants.plane), localeManager.getString(TextConstants.departureTime), localeManager.getString(TextConstants.weekd), localeManager.getString(TextConstants.planeId));
+            System.out.printf(printFormat, localeManager.getString(TextConstants.DESTINATION), localeManager.getString(TextConstants.FLIGHT_ID), localeManager.getString(TextConstants.PLANE_TYPE), localeManager.getString(TextConstants.DEPARTURE_TIME), localeManager.getString(TextConstants.WEEKDAY), localeManager.getString(TextConstants.PLANE_ID));
             for (Flight flight : arr) {
                 System.out.printf(printFormat, flight.getDestination(), flight.getFlightID(), flight.getPlaneType(), flight.getDepartureTime(), flight.getWeekday(), flight.getPlaneID());
             }

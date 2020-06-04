@@ -1,25 +1,29 @@
 package model;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Arrays;
+
+import model.entities.Flight;
+import model.entities.Weekday;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class SearchService {
 
-    DataSource dataSet;
-    private static final Logger log = LogManager.getLogger(SearchService.class);
+    DataManager dataSet;
+    private static final Logger LOGGER = LogManager.getLogger(SearchService.class);
 
-    public SearchService(DataSource dataSet) {
-        this.dataSet = dataSet;
+    public SearchService() throws IOException, ClassNotFoundException {
+        this.dataSet = new DataManager();
     }
 
-    public DataSource getSet() {
+    public DataManager getSet() {
         return this.dataSet;
     }
 
     public Flight[] destinationSearch(String dest) {
-        log.info("searched dest - {}", dest);
+        LOGGER.info("searched dest - {}", dest);
         int arrSize = 0;
         Flight[] result = new Flight[dataSet.getFlights().length];
         for (Flight flight : dataSet.getFlights()) {
@@ -29,7 +33,7 @@ public class SearchService {
     }
 
     public Flight[] weekdaySearch(Weekday day) {
-        log.info("searched day - {}", day);
+        LOGGER.info("searched day - {}", day);
         int arrSize = 0;
         Flight[] result = new Flight[dataSet.getFlights().length];
         for (Flight flight : dataSet.getFlights()) {
@@ -39,7 +43,7 @@ public class SearchService {
     }
 
     public Flight[] weekdayDTimeSearch(Weekday day, LocalTime dTime) {
-        log.info("searched weekday - {}, searched time - {}", day, dTime);
+        LOGGER.info("searched weekday - {}, searched time - {}", day, dTime);
         int arrSize = 0;
         Flight[] result = new Flight[dataSet.getFlights().length];
         for(Flight flight : dataSet.getFlights()) {

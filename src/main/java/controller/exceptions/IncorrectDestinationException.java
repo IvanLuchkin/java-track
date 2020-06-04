@@ -1,4 +1,4 @@
-package model.exceptions;
+package controller.exceptions;
 
 public class IncorrectDestinationException extends RuntimeException {
 
